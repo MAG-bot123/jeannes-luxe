@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Jeanne's Luxe - Beauty Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo h1 {
+            color: #764ba2;
+            font-size: 1.8rem;
+        }
+
+        .logo h1 span {
+            font-size: 0.9rem;
+            color: #666;
+            display: block;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        .date-time {
+            background: #f3f4f6;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            font-weight: bold;
+            color: #4b5563;
+        }
+
+        .share-btn {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 1rem;
+            transition: all 0.3s;
+        }
+
+        .share-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-tabs {
+            background: white;
+            padding: 0 2rem;
+            display: flex;
+            gap: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 1rem 1.5rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #6b7280;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            color: #764ba2;
+            border-bottom: 3px solid #764ba2;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .pos-layout {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 1.5rem;
+        }
+
+        .products-grid {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        .category-filter {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #e5e7eb;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .category-btn.active {
+            background: #764ba2;
+            color: white;
+            border-color: #764ba2;
+        }
+
+        .product-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .product-card {
+            background: #f9fafb;
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .product-card:hover {
+            border-color: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .product-price {
+            color: #764ba2;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .cart-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .cart-items {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .qty-btn {
+            width: 25px;
+            height: 25px;
+            border: none;
+            background: #f3f4f6;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .grand-total {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #764ba2;
+        }
+
+        .payment-methods {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .payment-btn {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .cash-btn {
+            background: #10b981;
+            color: white;
+        }
+
+        .mpesa-btn {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: #764ba2;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .alert {
+            padding: 0.8rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .date-filter {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .receipt {
+            font-family: monospace;
+            font-size: 12px;
+            padding: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .pos-layout {
+                grid-template-columns: 1fr;
+            }
+            .nav-tabs {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <h1>💄 Jeanne's Luxe</h1>
+            <p>Premium Beauty & Cosmetics</p>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <div class="date-time" id="dateTime"></div>
+            <button class="share-btn" onclick="openShareModal()">📱 Shiriki System</button>
+        </div>
+    </div>
+
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('pos')">🛒 Kuuza</button>
+        <button class="tab-btn" onclick="switchTab('products')">📦 Bidhaa</button>
+        <button class="tab-btn" onclick="switchTab('users')">👥 Watumiaji</button>
+        <button class="tab-btn" onclick="switchTab('sales')">📊 Mauzo</button>
+        <button class="tab-btn" onclick="switchTab('reports')">📈 Ripoti</button>
+    </div>
+
+    <div class="container">
+        <div id="pos" class="tab-content active">
+            <div class="pos-layout">
+                <div class="products-grid">
+                    <div class="search-bar">
+                        <input type="text" id="searchProduct" placeholder="🔍 Tafuta bidhaa...">
+                    </div>
+                    <div class="category-filter" id="categoryFilter"></div>
+                    <div class="product-cards" id="productList"></div>
+                </div>
+                <div class="cart-panel">
+                    <h3>🛍️ Kikapu</h3>
+                    <div class="cart-items" id="cartItems"></div>
+                    <div class="cart-total">
+                        <div class="total-row">
+                            <span>Jumla:</span>
+                            <span id="subtotal">TSh 0</span>
+                        </div>
+                        <div class="total-row grand-total">
+                            <span>Kulipa:</span>
+                            <span id="grandTotal">TSh 0</span>
+                        </div>
+                        <div class="payment-methods">
+                            <button class="payment-btn cash-btn" onclick="openPaymentModal('Cash')">💰 Cash</button>
+                            <button class="payment-btn mpesa-btn" onclick="openPaymentModal('M-Pesa')">📱 M-Pesa</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="products" class="tab-content">
+            <div class="form-card">
+                <h3>➕ Ongeza Bidhaa</h3>
+                <div class="alert" id="productAlert"></div>
+                <form id="productForm">
+                    <div class="form-group">
+                        <label>Jina la Bidhaa</label>
+                        <input type="text" id="prodName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Aina</label>
+                        <select id="prodCategory">
+                            <option value="Lipstick">Lipstick</option>
+                            <option value="Foundation">Foundation</option>
+                            <option value="Perfume">Perfume</option>
+                            <option value="Eyeshadow">Eyeshadow</option>
+                            <option value="Skincare">Skincare</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Bei (TSh)</label>
+                        <input type="number" id="prodPrice" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Wingi</label>
+                        <input type="number" id="prodStock" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">➕ Ongeza</button>
+                </form>
+            </div>
+            <div class="form-card">
+                <h3>📋 Orodha ya Bidhaa</h3>
+                <div style="overflow-x: auto;">
+                    <table id="productsTable">
+                        <thead><tr><th>Jina</th><th>Aina</th><th>Bei</th><th>Wingi</th><th>Kitendo</th></tr></thead>
+                        <tbody id="productsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="users" class="tab-content">
+            <div class="form-card">
+                <h3>➕ Ongeza Mtumiaji</h3>
+                <form id="userForm">
+                    <div class="form-group">
+                        <label>Jina kamili</label>
+                        <input type="text" id="userName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Namba ya simu</label>
+                        <input type="tel" id="userPhone" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Nafasi</label>
+                        <select id="userRole">
+                            <option value="Admin">Admin</option>
+                            <option value="Cashier">Cashier</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Nenosiri</label>
+                        <input type="password" id="userPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">➕ Ongeza</button>
+                </form>
+            </div>
+            <div class="form-card">
+                <h3>👥 Watumiaji Wote</h3>
+                <table id="usersTable">
+                    <thead><tr><th>Jina</th><th>Simu</th><th>Nafasi</th><th>Kitendo</th></tr></thead>
+                    <tbody id="usersTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="sales" class="tab-content">
+            <div class="form-card">
+                <h3>📜 Historia ya Mauzo</h3>
+                <table id="salesTable">
+                    <thead><tr><th>Namba</th><th>Tarehe</th><th>Bidhaa</th><th>Jumla</th><th>Njia</th><th>Muuzaji</th></tr></thead>
+                    <tbody id="salesTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="reports" class="tab-content">
+            <div class="form-card">
+                <h3>📊 Ripoti ya Mauzo</h3>
+                <div class="date-filter">
+                    <div class="form-group" style="flex:1;">
+                        <label>Kuanzia</label>
+                        <input type="date" id="startDate">
+                    </div>
+                    <div class="form-group" style="flex:1;">
+                        <label>Hadi</label>
+                        <input type="date" id="endDate">
+                    </div>
+                    <button class="btn btn-primary" onclick="filterReports()">🔍 Filter</button>
+                </div>
+                <div id="reportsContent"></div>
+                <button class="btn btn-success" onclick="printReport()" style="margin-top:1rem;">🖨️ Chapisha Ripoti</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Modal -->
+    <div id="shareModal" class="modal">
+        <div class="modal-content">
+            <h3>📱 Shiriki Jeanne's Luxe</h3>
+            <div style="background:#f3f4f6; padding:1rem; border-radius:10px; margin:1rem 0;">
+                <strong>🔗 Link ya Kufungua:</strong><br>
+                <span id="shareUrl" style="word-break:break-all;">https://jeannes-luxe.github.io/jeannes-luxe/</span>
+            </div>
+            <div class="share-buttons" style="display:flex; gap:0.5rem; margin-top:1rem;">
+                <button class="btn btn-primary" onclick="shareToWhatsApp()">📱 WhatsApp</button>
+                <button class="btn btn-primary" onclick="copyToClipboard()" style="background:#6b7280;">📋 Copy Link</button>
+            </div>
+            <button class="btn btn-danger" onclick="closeShareModal()" style="width:100%; margin-top:1rem;">Funga</button>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="modal">
+        <div class="modal-content">
+            <h3>💳 Thibitisha Malipo</h3>
+            <div style="background:#f3f4f6; padding:1rem; border-radius:10px; margin:1rem 0; text-align:center;">
+                <strong>Jumla:</strong> <span id="modalTotal" style="font-size:1.5rem; color:#764ba2;">TSh 0</span>
+            </div>
+            <div id="cashSection">
+                <div class="form-group">
+                    <label>Kiasi Kilicholipwa</label>
+                    <input type="number" id="amountPaid" placeholder="Weka kiasi" oninput="calculateChange()">
+                </div>
+                <div id="changeDisplay" style="display:none; background:#d1fae5; padding:0.5rem; border-radius:10px;">
+                    💵 Chenji: <strong id="changeAmount">TSh 0</strong>
+                </div>
+            </div>
+            <div id="mpesaSection" style="display:none;">
+                <div class="form-group">
+                    <label>Namba ya M-Pesa</label>
+                    <input type="tel" id="mpesaNumber" placeholder="0712345678">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Muuzaji</label>
+                <select id="cashierName"><option value="Admin">Admin</option></select>
+            </div>
+            <div style="display:flex; gap:1rem;">
+                <button class="btn btn-primary" onclick="confirmPayment()">Thibitisha</button>
+                <button class="btn btn-danger" onclick="closePaymentModal()">Ghairi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Receipt Modal -->
+    <div id="receiptModal" class="modal">
+        <div class="modal-content">
+            <h3>🧾 Receipt</h3>
+            <div id="receiptContent" class="receipt"></div>
+            <button class="btn btn-primary" onclick="printReceipt()" style="margin-top:1rem;">🖨️ Print</button>
+        </div>
+    </div>
+
+    <script>
+        let products = [], sales = [], users = [], cart = [];
+        let currentTotal = 0;
+
+        function loadData() {
+            const savedProducts = localStorage.getItem('jeanne_products');
+            const savedSales = localStorage.getItem('jeanne_sales');
+            const savedUsers = localStorage.getItem('jeanne_users');
+            
+            if (savedProducts) products = JSON.parse(savedProducts);
+            else products = [
+                { id: 1, name: "Lipstick Red", category: "Lipstick", price: 15000, stock: 20 },
+                { id: 2, name: "Foundation Glow", category: "Foundation", price: 28000, stock: 15 },
+                { id: 3, name: "Perfume Rose", category: "Perfume", price: 45000, stock: 10 },
+                { id: 4, name: "Eyeshadow Palette", category: "Eyeshadow", price: 35000, stock: 8 },
+                { id: 5, name: "Moisturizer", category: "Skincare", price: 22000, stock: 25 }
+            ];
+            if (savedSales) sales = JSON.parse(savedSales);
+            else sales = [];
+            if (savedUsers) users = JSON.parse(savedUsers);
+            else users = [{ id: 1, name: "Admin", phone: "0712345678", role: "Admin", password: "admin123" }];
+            
+            updateDateTime();
+            renderAll();
+            updateCashierSelect();
+        }
+
+        function saveProducts() { localStorage.setItem('jeanne_products', JSON.stringify(products)); }
+        function saveSales() { localStorage.setItem('jeanne_sales', JSON.stringify(sales)); }
+        function saveUsers() { localStorage.setItem('jeanne_users', JSON.stringify(users)); }
+
+        function updateCashierSelect() {
+            document.getElementById('cashierName').innerHTML = users.map(u => `<option value="${u.name}">${u.name}</option>`).join('');
+        }
+
+        function renderAll() {
+            renderProductCards();
+            renderProductsTable();
+            renderUsersTable();
+            renderCart();
+            renderSalesTable();
+            renderReports();
+            renderCategoryFilter();
+        }
+
+        function renderCategoryFilter() {
+            const categories = [...new Set(products.map(p => p.category))];
+            document.getElementById('categoryFilter').innerHTML = '<button class="category-btn active" onclick="filterByCategory(\'all\')">Zote</button>' +
+                categories.map(cat => `<button class="category-btn" onclick="filterByCategory('${cat}')">${cat}</button>`).join('');
+        }
+
+        let currentCategory = 'all', searchTerm = '';
+        function filterByCategory(category) { currentCategory = category; renderProductCards(); }
+        function filterBySearch() { searchTerm = document.getElementById('searchProduct').value.toLowerCase(); renderProductCards(); }
+
+        function renderProductCards() {
+            let filtered = products;
+            if (currentCategory !== 'all') filtered = filtered.filter(p => p.category === currentCategory);
+            if (searchTerm) filtered = filtered.filter(p => p.name.toLowerCase().includes(searchTerm));
+            document.getElementById('productList').innerHTML = filtered.map(p => `
+                <div class="product-card" onclick="addToCart(${p.id})">
+                    <h4>${p.name}</h4>
+                    <div class="product-price">TSh ${p.price.toLocaleString()}</div>
+                    <div class="product-stock">Stock: ${p.stock}</div>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(id) {
+            const p = products.find(p => p.id === id);
+            if (!p || p.stock <= 0) { showAlert('Bidhaa haipo au imeisha!', 'error'); return; }
+            const existing = cart.find(i => i.id === id);
+            if (existing) { if (existing.quantity + 1 > p.stock) { showAlert('Stock haitoshi!', 'error'); return; } existing.quantity++; }
+            else cart.push({ id: p.id, name: p.name, price: p.price, quantity: 1 });
+            renderCart();
+        }
+
+        function updateCartQuantity(id, delta) {
+            const item = cart.find(i => i.id === id);
+            const p = products.find(p => p.id === id);
+            if (item) {
+                const newQty = item.quantity + delta;
+                if (newQty <= 0) cart = cart.filter(i => i.id !== id);
+                else if (newQty <= p.stock) item.quantity = newQty;
+                else showAlert('Stock haitoshi!', 'error');
+            }
+            renderCart();
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cartItems');
+            if (cart.length === 0) container.innerHTML = '<p>Kikapu kiko tupu</p>';
+            else container.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <div><strong>${item.name}</strong><br>TSh ${item.price.toLocaleString()}</div>
+                    <div><button class="qty-btn" onclick="updateCartQuantity(${item.id}, -1)">-</button> ${item.quantity} <button class="qty-btn" onclick="updateCartQuantity(${item.id}, 1)">+</button></div>
+                    <div><strong>TSh ${(item.price * item.quantity).toLocaleString()}</strong></div>
+                </div>
+            `).join('');
+            const total = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
+            document.getElementById('subtotal').innerText = `TSh ${total.toLocaleString()}`;
+            document.getElementById('grandTotal').innerText = `TSh ${total.toLocaleString()}`;
+        }
+
+        function openPaymentModal(method) {
+            if (cart.length === 0) { showAlert('Hakuna bidhaa!', 'error'); return; }
+            currentTotal = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
+            document.getElementById('modalTotal').innerHTML = `TSh ${currentTotal.toLocaleString()}`;
+            if (method === 'Cash') {
+                document.getElementById('cashSection').style.display = 'block';
+                document.getElementById('mpesaSection').style.display = 'none';
+            } else {
+                document.getElementById('cashSection').style.display = 'none';
+                document.getElementById('mpesaSection').style.display = 'block';
+            }
+            document.getElementById('paymentModal').classList.add('active');
+        }
+
+        function calculateChange() {
+            const paid = parseFloat(document.getElementById('amountPaid').value);
+            if (!isNaN(paid) && paid >= currentTotal) {
+                document.getElementById('changeAmount').innerHTML = `TSh ${(paid - currentTotal).toLocaleString()}`;
+                document.getElementById('changeDisplay').style.display = 'block';
+            } else document.getElementById('changeDisplay').style.display = 'none';
+        }
+
+        function confirmPayment() {
+            const cashier = document.getElementById('cashierName').value;
+            let paymentDetails = '';
+            if (document.getElementById('cashSection').style.display !== 'none') {
+                const paid = parseFloat(document.getElementById('amountPaid').value);
+                if (isNaN(paid) || paid < currentTotal) { showAlert('Weka kiasi sahihi!', 'error'); return; }
+                paymentDetails = `Cash | Imeolipwa: TSh ${paid.toLocaleString()} | Chenji: TSh ${(paid - currentTotal).toLocaleString()}`;
+            } else {
+                const mpesaNumber = document.getElementById('mpesaNumber').value;
+                if (!mpesaNumber || mpesaNumber.length < 9) { showAlert('Weka namba sahihi!', 'error'); return; }
+                paymentDetails = `M-Pesa | Namba: ${mpesaNumber}`;
+            }
+            for (const item of cart) {
+                const p = products.find(p => p.id === item.id);
+                if (p) p.stock -= item.quantity;
+            }
+            saveProducts();
+            const sale = { id: Date.now(), date: new Date().toLocaleString(), items: [...cart], total: currentTotal, paymentMethod: document.getElementById('cashSection').style.display !== 'none' ? 'Cash' : 'M-Pesa', paymentDetails, cashier };
+            sales.unshift(sale);
+            saveSales();
+            showReceipt(sale);
+            cart = [];
+            renderAll();
+            closePaymentModal();
+        }
+
+        function showReceipt(sale) {
+            document.getElementById('receiptContent').innerHTML = `
+                <div style="text-align:center;">
+                    <h3>💄 Jeanne's Luxe</h3>
+                    <p>${new Date().toLocaleString()}</p>
+                    <hr><p>Muuzaji: ${sale.cashier}</p>
+                    <p>Njia: ${sale.paymentMethod}</p><hr>
+                    <table style="width:100%">${sale.items.map(i => `<tr><td>${i.name}</td><td>${i.quantity}</td><td>TSh ${(i.price * i.quantity).toLocaleString()}</td></tr>`).join('')}</table>
+                    <hr><h3>Jumla: TSh ${sale.total.toLocaleString()}</h3>
+                    <p>Asante kwa kununua Jeanne's Luxe!</p>
+                </div>`;
+            document.getElementById('receiptModal').classList.add('active');
+        }
+
+        function printReceipt() { const w = window.open('', '_blank'); w.document.write(document.getElementById('receiptContent').innerHTML); w.print(); }
+        function closePaymentModal() { document.getElementById('paymentModal').classList.remove('active'); }
+        function closeShareModal() { document.getElementById('shareModal').classList.remove('active'); }
+        function openShareModal() { document.getElementById('shareUrl').innerHTML = window.location.href; document.getElementById('shareModal').classList.add('active'); }
+        function shareToWhatsApp() { window.open(`https://wa.me/?text=${encodeURIComponent(window.location.href)}`, '_blank'); }
+        function copyToClipboard() { navigator.clipboard.writeText(window.location.href); showAlert('Link imenakiliwa!', 'success'); }
+
+        function renderProductsTable() {
+            document.getElementById('productsTableBody').innerHTML = products.map(p => `<tr><td>${p.name}</td><td>${p.category}</td><td>TSh ${p.price.toLocaleString()}</td><td>${p.stock}</td><td><button class="btn btn-danger" onclick="deleteProduct(${p.id})">Futa</button></td></tr>`).join('');
+        }
+        function deleteProduct(id) { if(confirm('Futa?')){ products = products.filter(p=>p.id!==id); saveProducts(); renderAll(); } }
+        function renderUsersTable() {
+            document.getElementById('usersTableBody').innerHTML = users.map(u => `<tr><td>${u.name}</td><td>${u.phone}</td><td>${u.role}</td><td><button class="btn btn-danger" onclick="deleteUser(${u.id})">Futa</button></td></tr>`).join('');
+        }
+        function deleteUser(id) { if(confirm('Futa?')){ users = users.filter(u=>u.id!==id); saveUsers(); renderAll(); updateCashierSelect(); } }
+        function renderSalesTable() {
+            document.getElementById('salesTableBody').innerHTML = sales.length ? sales.map(s => `<tr><td>#${s.id.toString().slice(-6)}</td><td>${s.date}</td><td>${s.items.map(i=>`${i.name} x${i.quantity}`).join(',')}</td><td>TSh ${s.total.toLocaleString()}</td><td>${s.paymentMethod}</td><td>${s.cashier}</td></tr>`).join('') : '<tr><td colspan="6">Hakuna mauzo</td></tr>';
+        }
+        function filterReports() { renderReports(); }
+        function renderReports() {
+            let start = document.getElementById('startDate').value, end = document.getElementById('endDate').value;
+            let filtered = [...sales];
+            if(start) filtered = filtered.filter(s=>new Date(s.date)>=new Date(start));
+            if(end){ let e=new Date(end); e.setHours(23,59,59); filtered=filtered.filter(s=>new Date(s.date)<=e); }
+            const total = filtered.reduce((s,i)=>s+i.total,0), cash = filtered.filter(s=>s.paymentMethod==='Cash').reduce((s,i)=>s+i.total,0), mpesa = filtered.filter(s=>s.paymentMethod==='M-Pesa').reduce((s,i)=>s+i.total,0);
+            document.getElementById('reportsContent').innerHTML = `
+                <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1rem;">
+                    <div style="background:#f3f4f6;padding:1rem;"><h4>💰 Jumla</h4><h2>TSh ${total.toLocaleString()}</h2></div>
+                    <div style="background:#f3f4f6;padding:1rem;"><h4>💵 Cash</h4><h2>TSh ${cash.toLocaleString()}</h2></div>
+                    <div style="background:#f3f4f6;padding:1rem;"><h4>📱 M-Pesa</h4><h2>TSh ${mpesa.toLocaleString()}</h2></div>
+                </div>
+                <table style="width:100%; margin-top:1rem;">${filtered.map(s=>`<tr><td>${s.date}</td><td>TSh ${s.total.toLocaleString()}</td><td>${s.paymentMethod}</td><td>${s.cashier}</td></tr>`).join('')}</table>`;
+        }
+        function printReport() { const w=window.open('','_blank'); w.document.write(document.getElementById('reportsContent').innerHTML); w.print(); }
+        function showAlert(msg,type){ const a=document.getElementById('productAlert'); a.className=`alert alert-${type}`; a.innerHTML=msg; a.style.display='block'; setTimeout(()=>a.style.display='none',3000); }
+        function updateDateTime() { document.getElementById('dateTime').innerHTML = new Date().toLocaleString('sw-TZ'); setTimeout(updateDateTime,1000); }
+        function switchTab(tab){ document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); document.getElementById(tab).classList.add('active'); event.target.classList.add('active'); renderAll(); }
+        document.getElementById('productForm').addEventListener('submit',e=>{ e.preventDefault(); products.push({id:Date.now(),name:document.getElementById('prodName').value,category:document.getElementById('prodCategory').value,price:parseInt(document.getElementById('prodPrice').value),stock:parseInt(document.getElementById('prodStock').value)}); saveProducts(); renderAll(); e.target.reset(); showAlert('Bidhaa imeongezwa!','success'); });
+        document.getElementById('userForm').addEventListener('submit',e=>{ e.preventDefault(); users.push({id:Date.now(),name:document.getElementById('userName').value,phone:document.getElementById('userPhone').value,role:document.getElementById('userRole').value,password:document.getElementById('userPassword').value}); saveUsers(); renderAll(); updateCashierSelect(); e.target.reset(); showAlert('Mtumiaji ameongezwa!','success'); });
+        document.getElementById('searchProduct').addEventListener('input',filterBySearch);
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('startDate').value = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0];
+        document.getElementById('endDate').value = today;
+        loadData();
+    </script>
+</body>
+</html>
